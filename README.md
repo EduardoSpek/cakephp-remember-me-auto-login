@@ -12,7 +12,7 @@ ele quer se manter conectado naquele computador.
 
 ### A Solução
 
-Este componente serve para manter o usuário conectado pelo período que você definir.
+Esta solução serve para manter o usuário conectado pelo período que você definir.
 
 ## Instalação
 
