@@ -9,7 +9,7 @@
 */
 class MantenhaMeComponent extends Component {
 
-	public $components = array('Auth', 'Cookie', 'Session');
+	public $components = array('Auth', 'Cookie');
 	
 	public function validar() {
 		
