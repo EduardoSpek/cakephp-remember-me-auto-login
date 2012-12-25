@@ -1,4 +1,4 @@
-## MantenhaMe - Componente para CakePHP 2.x
+## Solução para CakePHP 2.x que mantem o usuário conectado
 
 ### O problema
 
