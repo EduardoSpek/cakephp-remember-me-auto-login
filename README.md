@@ -34,8 +34,6 @@ No seu `AppController` adicione ou crie o seu método `beforeFilter` e coloque o
         
       }
 
-Feito isso, o componente verificará se é para manter o usuário logado ou não.
-
 Suponhamos que você tenha um `UserController`, e obviamente com os métodos para `Login` e `Logout`.
 Vamos implementá-lo com colocando:
 
