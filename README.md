@@ -14,45 +14,56 @@ ele quer se manter conectado naquele computador.
 
 Este componente serve para manter o usuário conectado pelo período que você definir.
 
-## Requisitos
-
-* Download do component: http://github.com/EduardoSpek/cakephp-remember-me-auto-login
-* Adicione o arquivo `MantenhaMeComponent.php` na pasta `app/Controller/Component`
-
 ## Instalação
 
 No seu `AppController` adicione ou crie o seu método `beforeFilter` e coloque o seguinte:
 
 
       public function beforeFilter() {
+                 
+        $cookie = $this->Cookie->read('Usuario');		
         
-          $this->MantenhaMe->validar();
+        if ($cookie and $this->Auth->loggedIn() == false) {
+        
+        	$partes = explode(":", @stripslashes($cookie));
+        	$this->loadModel('User');
+        	$usuario = $this->User->find('first', array('conditions'=>array('User.username'=>$partes[0], 'User.password'=>$partes[1])));
+        	$this->Auth->login($usuario['User']);
+        	
+        }
         
       }
 
 Feito isso, o componente verificará se é para manter o usuário logado ou não.
 
 Suponhamos que você tenha um `UserController`, e obviamente com os métodos para `Login` e `Logout`.
-Vamos implementá-lo com os métodos do nosso componente `MantenhaMeComponent`, 
-portanto, no seu `UserController` adicione:
+Vamos implementá-lo com colocando:
 
     public function login() {
 			
     if ($this->Auth->login())  { 
     
-          $this->MantenhaMe->login('+ 2 weeks');
+    	if ($this->data['User']['mantenha_me']) {
+    	
+    		$usuario = $this->User->findByUsername($this->data['User']['username']);	
+    		$hash = $usuario['User']['username'].':'.$usuario['User']['password'];
+    		$this->Cookie->write('Usuario', $hash, false, '+2 weeks');
+    		
+    	}
+    	else { $this->Cookie->delete('Usuario'); }
             
         }
-    } 
+    }
       
 Feito isso, o componente guarda as informações do usuário para realizar a validação logo mais.
-Para configurar o período que o sistema manterá o usuário logado, você pode mudar o valor, que por padrão é: `+2 weeks`.
+Para configurar o período que o sistema manterá o usuário logado, você pode mudar o valor acima, que por padrão é: `+2 weeks`.
 
-Adicione o método abaixo no método `Logout` do seu `UserController`:
+Adicione ao `Logout` do seu `UserController`:
 
     public function logout() {  		  
     
-        $this->MantenhaMe->logout();
+       $this->Cookie->delete('Usuario');
+       $this->Auth->logout();
                 
     } 
 
